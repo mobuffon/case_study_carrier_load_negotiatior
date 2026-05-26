@@ -1,0 +1,16 @@
+load_id,origin,destination,pickup_datetime,delivery_datetime,equipment_type,loadboard_rate,notes,weight,commodity_type,num_of_pieces,miles,dimensions
+L-1001,Chicago IL,Dallas TX,2026-06-02T08:00:00,2026-06-03T18:00:00,Dry Van,1850.00,Drop and hook available,42000,General Freight,24,925,48ft x 8ft x 8.5ft
+L-1002,Los Angeles CA,Phoenix AZ,2026-06-02T06:00:00,2026-06-02T20:00:00,Reefer,1400.00,Temp 34F required,38000,Produce,18,372,48ft x 8ft x 9ft
+L-1003,Atlanta GA,Miami FL,2026-06-03T09:00:00,2026-06-04T14:00:00,Dry Van,1650.00,No touch freight,36000,Consumer Goods,20,662,53ft x 8ft x 9ft
+L-1004,Seattle WA,Portland OR,2026-06-02T07:00:00,2026-06-02T15:00:00,Flatbed,950.00,Tarps required,45000,Lumber,12,174,48ft x 8ft x 8ft
+L-1005,New York NY,Boston MA,2026-06-03T10:00:00,2026-06-03T18:00:00,Dry Van,800.00,Live unload,28000,Retail,30,215,53ft x 8ft x 9ft
+L-1006,Houston TX,New Orleans LA,2026-06-04T08:00:00,2026-06-04T16:00:00,Reefer,1100.00,Temp 38F,40000,Seafood,15,348,48ft x 8ft x 9ft
+L-1007,Denver CO,Salt Lake City UT,2026-06-05T07:00:00,2026-06-06T12:00:00,Dry Van,1250.00,Mountain pass route,32000,Electronics,22,525,53ft x 8ft x 9ft
+L-1008,Charlotte NC,Nashville TN,2026-06-04T09:00:00,2026-06-04T20:00:00,Flatbed,1050.00,Oversize permit ready,46000,Steel,8,409,48ft x 8.5ft x 8ft
+L-1009,Detroit MI,Cleveland OH,2026-06-03T08:00:00,2026-06-03T14:00:00,Dry Van,650.00,Quick turnaround,25000,Auto Parts,40,170,53ft x 8ft x 9ft
+L-1010,Phoenix AZ,Las Vegas NV,2026-06-05T08:00:00,2026-06-05T16:00:00,Reefer,900.00,Temp 36F,35000,Beverages,28,297,48ft x 8ft x 9ft
+L-1011,Memphis TN,St Louis MO,2026-06-06T07:00:00,2026-06-06T15:00:00,Dry Van,750.00,FCFS pickup,30000,Paper Products,35,284,53ft x 8ft x 9ft
+L-1012,Kansas City MO,Oklahoma City OK,2026-06-04T10:00:00,2026-06-05T08:00:00,Dry Van,900.00,Drop trailer,33000,Packaging,26,343,53ft x 8ft x 9ft
+L-1013,Minneapolis MN,Chicago IL,2026-06-05T06:00:00,2026-06-05T18:00:00,Reefer,1350.00,Temp 32F,41000,Dairy,20,408,48ft x 8ft x 9ft
+L-1014,Portland OR,Sacramento CA,2026-06-06T08:00:00,2026-06-07T10:00:00,Flatbed,1450.00,Tarps required,44000,Building Materials,16,583,48ft x 8.5ft x 8ft
+L-1015,Jacksonville FL,Atlanta GA,2026-06-07T09:00:00,2026-06-08T08:00:00,Dry Van,1100.00,Appointment required,34000,Furniture,18,346,53ft x 8ft x 9ft
