@@ -48,7 +48,7 @@ Copy from `04_DEPLOYMENT.md` "Reproduction" section.
 Table of every env var, type, default, purpose.
 
 ### 10. Testing
-"Run `pytest` from repo root. Tests use mock FMCSA mode."
+"Run `pytest` from repo root."
 
 ### 11. HappyRobot workflow setup
 Link to `docs/happyrobot_workflow.md` for full node-by-node spec. README has a 5-line summary of what nodes are involved and which endpoints they hit.
@@ -256,7 +256,7 @@ Call 2 — Negotiation failure (~60s):
 - [ ] Made 5+ test calls covering all outcome types — all visible in dashboard
 - [ ] Dashboard URL works on a fresh browser (no cached auth)
 - [ ] OpenAPI docs page (`/docs`) loads correctly
-- [ ] FMCSA webkey set in prod, `ALLOW_MOCK_FMCSA=false`
+- [ ] FMCSA webkey set in prod (when FMCSA verification is enabled)
 - [ ] Negotiation floor verified across 3+ test cases (never quoted below)
 - [ ] Video recorded, uploaded, link sharable
 - [ ] Carlos email drafted with all links filled in

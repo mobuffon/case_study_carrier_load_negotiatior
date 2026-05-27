@@ -4,7 +4,6 @@ import pytest
 from fastapi.testclient import TestClient
 
 os.environ["API_KEY"] = "test-key-123"
-os.environ["ALLOW_MOCK_FMCSA"] = "true"
 os.environ["DATABASE_URL"] = "sqlite:///./test.db"
 os.environ["LOADS_CSV_PATH"] = "app/data/loads.csv"
 

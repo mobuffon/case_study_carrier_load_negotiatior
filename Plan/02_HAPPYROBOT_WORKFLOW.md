@@ -39,7 +39,7 @@ Store in Settings → Workflow Settings / Environment Variables. Reference with 
 
 | Variable | Value |
 |---|---|
-| `API_BASE_URL` | `https://<your-app>.fly.dev` |
+| `API_BASE_URL` | `https://<your-app>.onrender.com` |
 | `API_KEY` | `<32-char hex secret>` |
 | `NEGOTIATION_FLOOR_PCT` | `0.92` |
 | `MAX_NEGOTIATION_ROUNDS` | `3` |

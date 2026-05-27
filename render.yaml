@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: acme-carrier-sales
+    runtime: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    startCommand: mkdir -p data && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: DATABASE_URL
+        value: sqlite:///./data/app.db
+      - key: SEED_DEMO_DATA
+        value: "true"
+      - key: LOG_LEVEL
+        value: INFO
+      - key: API_KEY
+        sync: false

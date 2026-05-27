@@ -43,8 +43,6 @@ class Settings(BaseSettings):
     fmcsa_webkey: str = ""
     database_url: str = "sqlite:///./app.db"
     log_level: str = "INFO"
-    environment: str = "development"
-    allow_mock_fmcsa: bool = False
     loads_csv_path: str = "app/data/loads.csv"
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
@@ -395,7 +393,7 @@ async def verify_carrier(mc_number: str) -> CarrierVerifyResponse:
             reason="Invalid MC number format"
         )
 
-    if settings.allow_mock_fmcsa:
+    if not settings.fmcsa_webkey:
         return _mock_response(clean_mc)
 
     url = f"{FMCSA_BASE}/carriers/docket-number/{clean_mc}"
@@ -756,7 +754,6 @@ import pytest
 from fastapi.testclient import TestClient
 
 os.environ["API_KEY"] = "test-key-123"
-os.environ["ALLOW_MOCK_FMCSA"] = "true"
 os.environ["DATABASE_URL"] = "sqlite:///./test.db"
 os.environ["LOADS_CSV_PATH"] = "app/data/loads.csv"
 

@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from app.config import get_settings
 from app.db import init_db
 from app.loads import load_loads_from_csv
-from app.routes import calls, carriers, health, loads as loads_routes, metrics
+from app.routes import calls, health, loads as loads_routes, metrics, negotiation
 
 
 @asynccontextmanager
@@ -20,12 +20,18 @@ async def lifespan(app: FastAPI):
     logging.getLogger(__name__).info("Starting up — initializing DB and loading loads CSV")
     init_db()
     load_loads_from_csv()
+    if settings.seed_demo_data:
+        from app.seed_calls import seed_calls_if_empty
+
+        seeded = seed_calls_if_empty()
+        if seeded:
+            logging.getLogger(__name__).info("Seeded %d demo calls", seeded)
     yield
     logging.getLogger(__name__).info("Shutting down")
 
 
 app = FastAPI(
-    title="HappyRobot Carrier Sales API",
+    title="Acme Logistics Carrier Sales API",
     version="0.1.0",
     lifespan=lifespan,
     description="Backend for inbound carrier load sales automation.",
@@ -39,10 +45,10 @@ app.add_middleware(
 )
 
 app.include_router(health.router)
-app.include_router(carriers.router)
 app.include_router(loads_routes.router)
 app.include_router(calls.router)
 app.include_router(metrics.router)
+app.include_router(negotiation.router)
 
 static_dir = Path(__file__).parent / "static"
 static_dir.mkdir(exist_ok=True)

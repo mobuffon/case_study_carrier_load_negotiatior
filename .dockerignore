@@ -1,0 +1,13 @@
+.venv
+__pycache__
+*.pyc
+.pytest_cache
+.ruff_cache
+.git
+.gitignore
+.env
+*.db
+tests/
+Plan/
+creds.txt
+inbound-carrier-sales-new-v1.json

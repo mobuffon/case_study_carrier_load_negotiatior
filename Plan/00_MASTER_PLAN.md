@@ -13,7 +13,7 @@ Carrier (web call)
     ↓
 HappyRobot Platform (managed — STT, LLM, TTS, workflow)
     ↓ HTTP requests with API key
-Our FastAPI backend (Dockerized, deployed to Fly.io)
+Our FastAPI backend (deployed to Render)
     ├── /carriers/verify  → proxies FMCSA QCMobile API
     ├── /loads/search     → queries in-memory loads (loaded from CSV)
     ├── /loads/{id}       → load detail
@@ -35,7 +35,7 @@ happyrobot-carrier-sales/
 ├── Dockerfile
 ├── .dockerignore
 ├── .gitignore
-├── fly.toml                     # Fly.io deployment config
+├── render.yaml                  # Render deployment config
 ├── requirements.txt
 ├── pyproject.toml               # Optional, for ruff/black config
 ├── .env.example
@@ -81,7 +81,7 @@ Each spec file is self-contained and contains everything a coding agent needs to
 1. **`01_BACKEND_API.md`** — FastAPI app: all endpoints, models, auth, data layer. This is the biggest spec and the foundation.
 2. **`02_HAPPYROBOT_WORKFLOW.md`** — HappyRobot workflow design: nodes, prompts, HTTP action configs, extraction schema.
 3. **`03_DASHBOARD.md`** — Single-page HTML dashboard: layout, charts, fetch logic.
-4. **`04_DEPLOYMENT.md`** — Dockerfile, fly.toml, deployment steps, env vars.
+4. **`04_DEPLOYMENT.md`** — render.yaml, Dockerfile, deployment steps, env vars.
 5. **`05_DELIVERABLES.md`** — README content, Acme Logistics doc, Carlos email, video script.
 
 ---
@@ -108,11 +108,10 @@ These apply across all files:
 
 ```
 API_KEY=<random 32-char hex string>           # required, for our auth
-FMCSA_WEBKEY=<key from FMCSA portal>          # required for prod, mockable for dev
+FMCSA_WEBKEY=<key from FMCSA portal>          # required for prod FMCSA verification
 DATABASE_URL=sqlite:////data/app.db           # path inside container
 LOG_LEVEL=INFO
-ENVIRONMENT=production                         # or "development"
-ALLOW_MOCK_FMCSA=false                        # if true, returns fake eligibility for testing
+SEED_DEMO_DATA=true                           # seed demo calls on first boot (Fly)
 ```
 
 `.env.example` should ship in the repo with placeholder values.
@@ -123,7 +122,7 @@ ALLOW_MOCK_FMCSA=false                        # if true, returns fake eligibilit
 
 ### Day 1
 - **Morning (4h)**: Build FastAPI backend per `01_BACKEND_API.md`. All endpoints working locally.
-- **Afternoon (2h)**: Dockerize + deploy to Fly.io per `04_DEPLOYMENT.md`. Verify HTTPS live URL.
+- **Afternoon (2h)**: Deploy to Render per `04_DEPLOYMENT.md`. Verify HTTPS live URL.
 - **Evening (2h)**: Build HappyRobot workflow skeleton per `02_HAPPYROBOT_WORKFLOW.md`. End-to-end web call succeeds.
 
 ### Day 2
@@ -147,7 +146,7 @@ Each item must be checked before submission:
 - [ ] Call records appear in `/calls` after each completed call
 - [ ] Dashboard loads at deployed URL and shows all 6 metric tiles + charts + recent calls table
 - [ ] Dashboard auto-refreshes or has a manual refresh button
-- [ ] Live deployment accessible at `https://<app>.fly.dev`
+- [ ] Live deployment accessible at `https://<app>.onrender.com`
 - [ ] README contains: setup, env vars, local dev, deploy steps, reproduction commands, architecture diagram
 - [ ] Acme Logistics doc complete (1-2 pages)
 - [ ] Carlos email drafted
@@ -158,8 +157,8 @@ Each item must be checked before submission:
 
 ## Things That Will Bite You (Pre-Read)
 
-1. **FMCSA webkey takes ~1 day to issue.** Request it FIRST THING. Build with `ALLOW_MOCK_FMCSA=true` until the key arrives.
-2. **Fly.io SQLite needs a volume.** Without `fly volumes create`, every redeploy wipes the DB.
+1. **FMCSA webkey takes ~1 day to issue.** Request it FIRST THING. Stub FMCSA responses locally until the key arrives.
+2. **Render free tier uses ephemeral disk.** SQLite survives restarts but is wiped on redeploy — `SEED_DEMO_DATA=true` re-seeds the dashboard.
 3. **HappyRobot variable passing is fiddly.** Plan extra time to debug how outputs from one node become inputs to the next.
 4. **Negotiation prompts need a hard floor.** Without explicit instructions and a numeric floor (e.g. `min_rate = loadboard_rate * 0.92`), the LLM will agree to anything.
 5. **Web call audio quality matters for the demo video.** Quiet room, headset mic, do 2-3 takes.

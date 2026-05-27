@@ -17,7 +17,6 @@ class Call(SQLModel, table=True):
     agreed_rate_cents: Optional[int] = None
 
     negotiation_rounds: int = 0
-    carrier_initial_offer_cents: Optional[int] = None
 
     outcome: str = Field(index=True)
     sentiment: str
