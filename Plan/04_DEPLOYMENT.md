@@ -27,8 +27,6 @@ services:
         value: sqlite:///./data/app.db
       - key: SEED_DEMO_DATA
         value: "true"
-      - key: LOG_LEVEL
-        value: INFO
       - key: API_KEY
         sync: false
 ```
@@ -95,9 +93,7 @@ inbound-carrier-sales-new-v1.json
 
 ```
 API_KEY=replace-with-32-char-hex
-DATABASE_URL=sqlite:///./app.db
-LOG_LEVEL=INFO
-SEED_DEMO_DATA=false
+# SEED_DEMO_DATA=true
 ```
 
 ---
@@ -137,9 +133,7 @@ SEED_DEMO_DATA=false
    |-----|-------|
    | `PYTHON_VERSION` | `3.11.9` |
    | `API_KEY` | your secret key |
-   | `DATABASE_URL` | `sqlite:///./data/app.db` |
-   | `SEED_DEMO_DATA` | `true` |
-   | `LOG_LEVEL` | `INFO` |
+   | `SEED_DEMO_DATA` | `true` (optional — or seed later via `POST /calls/seed-demo`) |
 
 4. **Plan**: Free
 5. Deploy

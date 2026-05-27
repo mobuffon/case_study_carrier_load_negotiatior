@@ -40,7 +40,6 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     api_key: str
-    fmcsa_webkey: str = ""
     database_url: str = "sqlite:///./app.db"
     log_level: str = "INFO"
     loads_csv_path: str = "app/data/loads.csv"

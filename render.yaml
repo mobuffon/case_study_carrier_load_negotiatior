@@ -14,7 +14,5 @@ services:
         value: sqlite:///./data/app.db
       - key: SEED_DEMO_DATA
         value: "true"
-      - key: LOG_LEVEL
-        value: INFO
       - key: API_KEY
         sync: false

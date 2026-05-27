@@ -256,7 +256,6 @@ Call 2 — Negotiation failure (~60s):
 - [ ] Made 5+ test calls covering all outcome types — all visible in dashboard
 - [ ] Dashboard URL works on a fresh browser (no cached auth)
 - [ ] OpenAPI docs page (`/docs`) loads correctly
-- [ ] FMCSA webkey set in prod (when FMCSA verification is enabled)
 - [ ] Negotiation floor verified across 3+ test cases (never quoted below)
 - [ ] Video recorded, uploaded, link sharable
 - [ ] Carlos email drafted with all links filled in

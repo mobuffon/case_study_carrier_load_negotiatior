@@ -107,11 +107,9 @@ These apply across all files:
 ## Environment Variables
 
 ```
-API_KEY=<random 32-char hex string>           # required, for our auth
-FMCSA_WEBKEY=<key from FMCSA portal>          # required for prod FMCSA verification
-DATABASE_URL=sqlite:////data/app.db           # path inside container
-LOG_LEVEL=INFO
-SEED_DEMO_DATA=true                           # seed demo calls on first boot (Fly)
+API_KEY=<random 32-char hex string>           # required
+SEED_DEMO_DATA=true                           # optional — seed demo calls on first boot (Render)
+DATABASE_URL=sqlite:////data/app.db           # optional — set in Dockerfile for Docker deploys
 ```
 
 `.env.example` should ship in the repo with placeholder values.
