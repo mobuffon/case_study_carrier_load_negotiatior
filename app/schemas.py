@@ -193,3 +193,8 @@ class MetricsSummary(BaseModel):
 class NegotiationResponse(BaseModel):
     action: Literal["counter", "accept", "no_deal"]
     rate_words: Optional[str] = None
+
+
+class SeedDemoResponse(BaseModel):
+    seeded: int
+    message: str

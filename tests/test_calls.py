@@ -40,6 +40,16 @@ def test_create_call_happyrobot_empty_fields(client, auth_headers):
     assert body["negotiation_rounds"] == 0
 
 
+def test_seed_demo_calls(client, auth_headers):
+    r = client.post("/calls/seed-demo?force=true", headers=auth_headers)
+    assert r.status_code == 200
+    body = r.json()
+    assert body["seeded"] == 15
+
+    again = client.post("/calls/seed-demo", headers=auth_headers)
+    assert again.json()["seeded"] == 0
+
+
 def test_create_call_maps_success_outcome(client, auth_headers):
     payload = {
         "outcome": "Success",

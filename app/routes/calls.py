@@ -7,7 +7,7 @@ from app.auth import require_api_key
 from app.calls_helpers import enrich_call
 from app.db import get_session
 from app.models import Call
-from app.schemas import CallCreate, CallDetailOut, CallOut
+from app.schemas import CallCreate, CallDetailOut, CallOut, SeedDemoResponse
 
 router = APIRouter(
     prefix="/calls",
@@ -50,6 +50,18 @@ def list_calls(
     stmt = select(Call).order_by(Call.created_at.desc()).limit(limit)
     calls = session.exec(stmt).all()
     return [CallOut(**enrich_call(c)) for c in calls]
+
+
+@router.post("/seed-demo", response_model=SeedDemoResponse)
+def seed_demo_calls(force: bool = Query(False)):
+    from app.seed_calls import seed_calls, seed_calls_if_empty
+
+    count = seed_calls() if force else seed_calls_if_empty()
+    if count:
+        message = f"Seeded {count} demo calls."
+    else:
+        message = "Calls already exist; pass force=true to replace."
+    return SeedDemoResponse(seeded=count, message=message)
 
 
 @router.get("/{call_id}", response_model=CallDetailOut)
