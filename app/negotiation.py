@@ -21,39 +21,36 @@ def compute_negotiation(
 ) -> dict:
     """
     Negotiation policy:
-    - Round 1: split the difference with the carrier (from loadboard rate).
-    - Round 2: last counter minus $30, clamp to floor.
-    - Round 3: final offer = max(floor, last counter) — hold the line.
-    - Round 3 + carrier still below floor → no_deal.
+    - Round 1: split the difference with the carrier (between our offer and theirs).
+      If the split is below floor, counter at floor instead. Never accept outright.
+    - Round 2: last counter minus $30, clamp to floor. Never accept outright.
+    - Round 3: accept only if carrier is within [floor, our_offer]; otherwise hold
+      at max(floor, our_offer) or no_deal if carrier is below floor.
     """
     if round_num < 1 or round_num > MAX_ROUNDS:
         raise ValueError(f"round must be between 1 and {MAX_ROUNDS}")
 
-    loadboard = _round_dollars(loadboard_rate)
     our = _round_dollars(our_offer)
     carrier = _round_dollars(carrier_counter)
     floor = _round_dollars(loadboard_rate * floor_pct)
-    is_final = round_num >= MAX_ROUNDS
-
-    if carrier >= floor and carrier <= our:
-        return _accept(carrier)
 
     if round_num == 1:
-        counter = _round_dollars((loadboard + carrier) / 2)
-    elif round_num == 2:
-        counter = our - ROUND2_PLUS_DEDUCTION
-    else:
-        counter = max(floor, our)
+        counter = _round_dollars((our + carrier) / 2)
+        counter = max(counter, floor)
+        return _counter(counter)
 
-    counter = max(counter, floor)
+    if round_num == 2:
+        counter = max(our - ROUND2_PLUS_DEDUCTION, floor)
+        return _counter(counter)
 
-    if is_final and carrier < floor:
+    # Round 3 — floor is the last-resort line; accept only here.
+    if carrier < floor:
         return {"action": "no_deal"}
 
-    if counter >= carrier and carrier >= floor:
+    if carrier <= our:
         return _accept(carrier)
 
-    return _counter(counter)
+    return _counter(max(floor, our))
 
 
 def _counter(amount: int) -> dict:

@@ -9,6 +9,15 @@ def test_round1_meet_in_middle():
     }
 
 
+def test_round1_does_not_accept_favorable_carrier_counter():
+    # Offer 650, carrier 600 — split to 625; floor 598 is not accepted on round 1.
+    r = compute_negotiation(650, 650, 600, 1)
+    assert r == {
+        "action": "counter",
+        "rate_words": "six hundred twenty-five dollars",
+    }
+
+
 def test_round2_last_offer_minus_thirty():
     r = compute_negotiation(1850, 1925, 2000, 2)
     assert r == {
@@ -48,11 +57,43 @@ def test_round2_last_offer_minus_thirty_clamped_to_floor():
     }
 
 
-def test_accept_when_carrier_at_or_below_offer():
+def test_round2_hits_floor_when_step_down_crosses_it():
+    r = compute_negotiation(650, 625, 600, 2)
+    assert r == {
+        "action": "counter",
+        "rate_words": "five hundred ninety-eight dollars",
+    }
+
+
+def test_round1_counters_instead_of_accepting_below_offer():
     r = compute_negotiation(1850, 1850, 1800, 1)
     assert r == {
+        "action": "counter",
+        "rate_words": "one thousand and eight hundred twenty-five dollars",
+    }
+
+
+def test_round3_accepts_when_carrier_within_range():
+    r = compute_negotiation(650, 625, 600, 3)
+    assert r == {
         "action": "accept",
-        "rate_words": "one thousand and eight hundred dollars",
+        "rate_words": "six hundred dollars",
+    }
+
+
+def test_round3_holds_floor_when_carrier_asks_above_last_offer():
+    r = compute_negotiation(650, 598, 600, 3)
+    assert r == {
+        "action": "counter",
+        "rate_words": "five hundred ninety-eight dollars",
+    }
+
+
+def test_round3_accepts_at_floor():
+    r = compute_negotiation(650, 598, 598, 3)
+    assert r == {
+        "action": "accept",
+        "rate_words": "five hundred ninety-eight dollars",
     }
 
 
