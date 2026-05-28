@@ -54,3 +54,8 @@ def test_volume_by_category(client, auth_headers):
     body = r.json()
     assert body["equipment_type"]["Dry Van"] >= 1
     assert body["commodity_type"]["General Freight"] >= 1
+    eq_total = sum(body["equipment_type"].values())
+    cm_total = sum(body["commodity_type"].values())
+    assert eq_total == cm_total
+    assert eq_total >= 1
+    assert sum(body["equipment_revenue"].values()) == sum(body["commodity_revenue"].values())

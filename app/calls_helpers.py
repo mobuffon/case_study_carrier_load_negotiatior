@@ -131,8 +131,11 @@ def build_volume_breakdown(calls: list[Call], window: str) -> dict:
 
     for call in filtered:
         load = get_load_for_call(call)
-        eq = load.get("equipment_type") if load else "No load matched"
-        cm = load.get("commodity_type") if load else "No load matched"
+        if not load:
+            continue
+
+        eq = (load.get("equipment_type") or "").strip() or "Unknown"
+        cm = (load.get("commodity_type") or "").strip() or "Unknown"
         equipment[eq] = equipment.get(eq, 0) + 1
         commodity[cm] = commodity.get(cm, 0) + 1
 

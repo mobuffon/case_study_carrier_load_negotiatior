@@ -224,14 +224,14 @@ canvas.chart-hover{cursor:crosshair;}
       <div class="card chart-card compact" style="margin:0">
         <div class="card-hdr">
           <span class="card-ttl">By Equipment Type</span>
-          <div class="toggle-group"><button class="tgl active" id="eq-vol" onclick="setToggle('eq','volume',this)">Volume</button><button class="tgl" id="eq-rev" onclick="setToggle('eq','revenue',this)">Revenue</button></div>
+          <div class="toggle-group"><button class="tgl active" id="eq-vol" onclick="setCategoryMode('volume')">Volume</button><button class="tgl" id="eq-rev" onclick="setCategoryMode('revenue')">Revenue</button></div>
         </div>
         <canvas id="c-equipment" data-h="150"></canvas>
       </div>
       <div class="card chart-card compact" style="margin:0">
         <div class="card-hdr">
           <span class="card-ttl">By Commodity</span>
-          <div class="toggle-group"><button class="tgl active" id="com-vol" onclick="setToggle('com','volume',this)">Volume</button><button class="tgl" id="com-rev" onclick="setToggle('com','revenue',this)">Revenue</button></div>
+          <div class="toggle-group"><button class="tgl active" id="com-vol" onclick="setCategoryMode('volume')">Volume</button><button class="tgl" id="com-rev" onclick="setCategoryMode('revenue')">Revenue</button></div>
         </div>
         <canvas id="c-commodity" data-h="150"></canvas>
       </div>
@@ -287,7 +287,7 @@ function setupCanvas(canvas,logicalH){
   canvas._hits=null;canvas._donut=null;canvas._timelineHits=null;
   return ctx;
 }
-let volumeData=null,toggleState={eq:"volume",com:"volume"},refreshTimer=null,timelineWindow="7d",timelineData=null;
+let volumeData=null,categoryMode="volume",refreshTimer=null,timelineWindow="7d",timelineData=null;
 const VALID_WINDOWS=new Set(["24h","7d","30d"]);
 function normalizeWindow(w){return VALID_WINDOWS.has(w)?w:"7d";}
 
@@ -371,11 +371,11 @@ function bindChartTooltips(){
   });
 }
 
-function drawHBar(canvasId,labels,values,colors,height,rev){
+function drawHBar(canvasId,labels,values,colors,height,rev,maxValOverride){
   const canvas=document.getElementById(canvasId);
   const logicalH=height||Math.max(labels.length*40+28,96);
   const ctx=setupCanvas(canvas,logicalH);
-  const W=canvas._logicalW,H=canvas._logicalH,maxVal=Math.max(...values,1);
+  const W=canvas._logicalW,H=canvas._logicalH,maxVal=maxValOverride||Math.max(...values,1);
   const pad=16,labelW=200,valW=56,barH=20,gap=40,barGap=14;
   const bx=labelW+barGap,bw=W-bx-valW-pad;
   const hits=[];
@@ -494,15 +494,28 @@ function renderCalls(calls){
     <td>${c.negotiation_rounds}</td><td>${usd(c.loadboard_rate)}</td><td>${usd(c.agreed_rate)}</td><td class="${d.c}">${d.t}</td></tr>`;}).join("");
 }
 
-function setToggle(chart,mode,btn){toggleState[chart]=mode;btn.parentElement.querySelectorAll(".tgl").forEach(b=>b.classList.remove("active"));btn.classList.add("active");renderCategories();}
+function setCategoryMode(mode){
+  categoryMode=mode;
+  ["eq","com"].forEach(p=>{
+    document.getElementById(p+"-vol")?.classList.toggle("active",mode==="volume");
+    document.getElementById(p+"-rev")?.classList.toggle("active",mode==="revenue");
+  });
+  renderCategories();
+}
 function renderCategories(){
   if(!volumeData)return;
-  const eqData=toggleState.eq==="volume"?volumeData.equipment_type:volumeData.equipment_revenue;
-  const comData=toggleState.com==="volume"?volumeData.commodity_type:volumeData.commodity_revenue;
+  const rev=categoryMode==="revenue";
+  const eqData=rev?volumeData.equipment_revenue:volumeData.equipment_type;
+  const comData=rev?volumeData.commodity_revenue:volumeData.commodity_type;
   const eqE=Object.entries(eqData||{}).sort((a,b)=>b[1]-a[1]);
   const comE=Object.entries(comData||{}).sort((a,b)=>b[1]-a[1]).slice(0,6);
-  if(eqE.length)drawHBar("c-equipment",eqE.map(([k])=>k),eqE.map(([,v])=>v),eqE.map(()=>"#5b8def"),eqE.length*40+28,toggleState.eq==="revenue");
-  if(comE.length)drawHBar("c-commodity",comE.map(([k])=>k),comE.map(([,v])=>v),comE.map(()=>"#a78bfa"),comE.length*40+28,toggleState.com==="revenue");
+  let sharedMax=null;
+  if(rev){
+    const vals=[...Object.values(eqData||{}),...Object.values(comData||{})];
+    if(vals.length)sharedMax=Math.max(...vals,1);
+  }
+  if(eqE.length)drawHBar("c-equipment",eqE.map(([k])=>k),eqE.map(([,v])=>v),eqE.map(()=>"#5b8def"),eqE.length*40+28,rev,sharedMax);
+  if(comE.length)drawHBar("c-commodity",comE.map(([k])=>k),comE.map(([,v])=>v),comE.map(()=>"#a78bfa"),comE.length*40+28,rev,sharedMax);
 }
 
 function detailItem(label,value){return `<div class="detail-item"><label>${label}</label><span>${value}</span></div>`;}
