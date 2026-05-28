@@ -21,11 +21,10 @@ async def lifespan(app: FastAPI):
     init_db()
     load_loads_from_csv()
     if settings.seed_demo_data:
-        from app.seed_calls import seed_calls_if_empty
+        from app.seed_calls import seed_calls
 
-        seeded = seed_calls_if_empty()
-        if seeded:
-            logging.getLogger(__name__).info("Seeded %d demo calls", seeded)
+        count = seed_calls()
+        logging.getLogger(__name__).info("Demo calls ready: %d records", count)
     yield
     logging.getLogger(__name__).info("Shutting down")
 
